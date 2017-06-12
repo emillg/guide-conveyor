@@ -1,6 +1,6 @@
 #!/bin/sh
-sudo pip install ibmiotf
-echo Setting up the device configuration 
+sudo pip install -r requirements.txt
+echo Setting up the device configuration
 echo Please Enter Org ID
 read ORG
 echo Please Enter Device Type
@@ -16,5 +16,3 @@ echo "id = $DEVICE_ID" >>device.conf
 echo "auth-method = token" >>device.conf
 echo "auth-token  = $DEVICE_TOKEN" >>device.conf
 echo You can edit the configurations stored in the device.conf file
-echo Starting the device client program
-python deviceClient.py

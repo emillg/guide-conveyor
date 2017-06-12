@@ -88,12 +88,17 @@ Now this client program will start your motor connected and also publish the dev
 
 Note : You may need to make shell script executable use this command `sudo chmod +x setup.sh`
 
-###### To run the program
+### Step 3 : Run the program
 
 ```
-python deviceClient.py
-```
+python deviceClient.py -t 2
 
+```
+#### For help run
+
+```
+python deviceClient.py -h
+```
 
 
 ## Useful links

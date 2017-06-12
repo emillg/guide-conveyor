@@ -10,6 +10,7 @@
 #   Hari hara prasad Viswanathan - Initial Contribution
 # *****************************************************************************
 
+import getopt
 import time
 import sys
 import uuid
@@ -27,6 +28,17 @@ GPIO.setup(13, GPIO.OUT)
 # Variables
 motor_up_time = time.time()
 running_status = False
+
+
+def usage():
+    print(
+        "commandSender: Raspberry Pi-powered conveyor belt" + "\n" +
+        "\n" +
+        "Options: " + "\n" +
+        "  -h, --help    Display help information" + "\n" +
+        "  -t, --time    [Mandatory] Time period in minutes to stop" +
+        " the motor, Recommended maximum value is 5" + "\n"
+        )
 
 
 class set_interval():  # Timer wrapper
@@ -115,21 +127,6 @@ def publish():
         if not success:
             print("Not connected to WIoTP")
 
-# Initialize the device client.
-try:
-    device_file = "device.conf"
-    device_options = ibmiotf.device.ParseConfigFile(device_file)
-    device_client = ibmiotf.device.Client(device_options)
-except Exception as e:
-        print("Caught exception connecting device: %s" % str(e))
-        sys.exit()
-
-device_client.connect()
-device_client.commandCallback = my_command_callback
-
-timeout = set_interval(publish, 1)
-start_handler()
-
 
 def signal_handler(signal, frame):
     print ('You pressed Ctrl+C!')
@@ -138,5 +135,64 @@ def signal_handler(signal, frame):
     # Disconnect the device from the cloud
     device_client.disconnect()
 
-signal.signal(signal.SIGINT, signal_handler)
-print ('Press Ctrl+C to exit')
+
+def stop_and_exit():
+    stop_handler()
+    timeout.cancel()
+    GPIO.cleanup()
+    device_client.disconnect()
+    sys.exit()
+
+if __name__ == "__main__":
+    stopTime = 5.0
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "ht:", ["help", "time="])
+        if len(opts) == 0:
+            print("Input argument missing")
+            GPIO.cleanup()
+            usage()
+            sys.exit()
+        for o, a in opts:
+            if o in ("-t", "--time"):
+                stopTime = float(a)
+                if stopTime > 5.0:
+                    print(
+                            "WARNING : Motor stop time period you have set" +
+                            " is more than recommended value " +
+                            "(5 min),However the motor will run " +
+                            "till the time you have set"
+                          )
+            elif o in ("-h", "--help"):
+                GPIO.cleanup()
+                usage()
+                sys.exit()
+            else:
+                print("unhandled option" + o)
+
+    except getopt.GetoptError as err:
+        print(str(err))
+        GPIO.cleanup()
+        usage()
+        sys.exit(2)
+    # Initialize the device client.
+    try:
+        device_file = "device.conf"
+        device_options = ibmiotf.device.ParseConfigFile(device_file)
+        device_client = ibmiotf.device.Client(device_options)
+    except Exception as e:
+            print("Caught exception connecting device: %s" % str(e))
+            GPIO.cleanup()
+            sys.exit()
+
+    device_client.connect()
+    device_client.commandCallback = my_command_callback
+
+    timeout = set_interval(publish, 1)
+    start_handler()
+
+    print ("Motor will stop in %s min" % str(stopTime))
+    r = threading.Timer(stopTime*60.0, stop_and_exit)
+    r.start()
+
+    signal.signal(signal.SIGINT, signal_handler)
+    print ('Press Ctrl+C to exit')
