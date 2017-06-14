@@ -7,7 +7,7 @@ echo Please Enter Device Type
 read DEVICE_TYPE
 echo Please Enter Device ID
 read DEVICE_ID
-echo please Enter Device Token
+echo Please Enter Authentication Token
 read DEVICE_TOKEN
 echo "[device]" > device.conf
 echo "org = $ORG" >>device.conf

@@ -58,6 +58,7 @@ $ git clone https://github.com/ibm-watson-iot/iot-guide-conveyor-rasp-pi
 $ cd iot-guide-conveyor-rasp-pi
 
 ```
+* You may need to make shell script executable use this command `sudo chmod +x setup.sh`
 * Run the setup.sh and fallow the instruction given in that
 
 ```bash
@@ -84,9 +85,7 @@ id =  <your device id>
 auth-method = token
 auth-token =  <your device token>
 ``` -->
-Now this client program will start your motor connected and also publish the device sensor data to the Watson IoT platform every second
 
-Note : You may need to make shell script executable use this command `sudo chmod +x setup.sh`
 
 ### Step 3 : Run the program
 
@@ -100,6 +99,7 @@ python deviceClient.py -t 2
 python deviceClient.py -h
 ```
 
+Now this client program will start your motor connected and publish the device sensor data to the Watson IoT platform every second, it will stop after 2 minutes as per given parameter.
 
 ## Useful links
 [Python]: https://www.python.org/
