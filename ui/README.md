@@ -63,7 +63,7 @@ WIoTPWidget.CreateGauge("rpmgauge","sensorData", "iot-conveyor-belt", "belt1", "
 <div id="aygauge" ></div>
 ```
 
-* Update the javascript to creat the widget
+* Update the javascript to create the widget
 
 ```javascript
 
@@ -87,7 +87,7 @@ WIoTPWidget.CreateGauge("aygauge","sensorData", "iot-conveyor-belt", "belt1", "a
 ```html
 <div id="speedchart" ></div>
 ```  
-* Update the javascript to creat the widget
+* Update the javascript to create the widget
 
 ```javascript
 WIoTPWidget.CreateChart("speedchart","sensorData", "iot-conveyor-belt", "belt1",
