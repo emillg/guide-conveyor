@@ -1,4 +1,4 @@
-## Watson IoT Platform getting started guides
+# Watson IoT Platform getting started guides
 This sample application is included as a component in a set of Getting Started guides that step through the basics of developing a ready-for-production, end-to-end IoT prototype system with Watson IoT Platform.
 
 Developers who are new to working with Watson IoT Platform can use the step-by-step processes in the Getting Started guides to develop and deploy a solution that demonstrates one or more Watson IoT Platform features.
@@ -6,28 +6,17 @@ Developers who are new to working with Watson IoT Platform can use the step-by-s
 For more information about the getting started guides, see the [Watson IoT Platform documentation](https://console.bluemix.net/docs/services/IoT/getting_started/getting-started-iot-overview.html).
 
 UI using widget library
-###  Install dependencies
 
-#### Step 1: Clone this repository
-
-```
-git clone https://github.com/ibm-watson-iot/iot-guide-conveyor-ui-html.git
+## Step 1: Setup
 
 ```
-#### Step 2: Install dependencies
-
-```
-cd iot-guide-conveyor-ui-html
+git clone https://github.com/ibm-watson-iot/guide-conveyor.git
+cd guide-conveyor/ui
 npm install
 ```
 
-#### Step 3: Building UI
-
-#### Widget signature
-Each widget uses the following JavaScript parameters:
-```
-WIoTPWidget.Create<widgetType>(html_id,eventName,deviceType,deviceId,param(s),[, .. widget specific config])
-```
+## Step 2: Building the UI
+Each widget uses the following JavaScript parameters: `WIoTPWidget.Create<widgetType>(html_id,eventName,deviceType,deviceId,param(s),[, .. widget specific config])`
 
 | Name | Meaning | example|
 | ------ | ------ |----|
@@ -39,14 +28,15 @@ WIoTPWidget.Create<widgetType>(html_id,eventName,deviceType,deviceId,param(s),[,
 | params | A set of sensor data that you want to plot simultaneously | ["rpm", "ay"] |
 
 
-##### Adding gauge for r.p.m
+### Adding gauge for r.p.m
 * Open the public/index.html template
 * Find the place holder for rpm gauge in the line no:17
 * Added dev element with an unique id as given below
 
 ```html
 <div id="rpmgauge" ></div>
-```  
+```
+
 * Update the javascript to create the widget
 
 ```javascript
@@ -62,16 +52,16 @@ WIoTPWidget.CreateGauge("rpmgauge","sensorData", "iot-conveyor-belt", "belt1", "
         max: 5.0, // 100 is default
         units: 'rpm'
       },['#FF0000', '#F97600', '#F6C600', '#60B044']);
-
 ```
 
-##### Adding gauge for Accelerometer
+### Adding gauge for Accelerometer
 * Find the place holder for accelerometer gauge in the line no:26
 * Added dev element with an unique id as given below
 
 ```html
 <div id="aygauge" ></div>
-```  
+```
+
 * Update the javascript to creat the widget
 
 ```javascript
@@ -89,7 +79,7 @@ WIoTPWidget.CreateGauge("aygauge","sensorData", "iot-conveyor-belt", "belt1", "a
 },['#FF0000', '#F97600', '#F6C600', '#60B044']);
 ```
 
-##### Adding gauge for motor speed chart
+### Adding gauge for motor speed chart
 * Find the place holder for motor speed chart in the line no: 35
 * Added dev element with an unique id as given below
 
@@ -99,13 +89,12 @@ WIoTPWidget.CreateGauge("aygauge","sensorData", "iot-conveyor-belt", "belt1", "a
 * Update the javascript to creat the widget
 
 ```javascript
-
 WIoTPWidget.CreateChart("speedchart","sensorData", "iot-conveyor-belt", "belt1",
 ["rpm", "ay"], [["line","rpm"],["line","ay"]],['#2ca02c','#d62728']);
-
 ```
-#### Step 4: Deploying it to bluemix
 
+
+## Deployment on IBM Cloud
 
 * Update the Watson IoT platform service name that you have created in the previous lesson in the manifest.yml
 
@@ -124,15 +113,13 @@ applications:
   - <your iot platform service name >
 ```
 
-
-* Run the following command to push the application into bluemix
+* Run the following command to push the application into IBM Cloud
 
 ```
 cf push <appname>
-
 ```
 
-##### To run locally
+## To Run locally
 
 * Add application credentials under config folder with the following json
 
@@ -143,29 +130,31 @@ config/default.json
   "api-key" : "Your app key",
   "auth-token" : "your auth-token"
 }
-
 ```
+
 * start the application
  `npm run start`
 
-### Reference
+
+## Reference
 
 To know more about the widget library please refer the [github]("https://github.com/ibm-watson-iot/iot-widgets")
 
-# Privacy notice
+## Privacy notice
 
 This web application includes code to track deployments to [IBM Bluemix](https://www.bluemix.net/) and other Cloud Foundry platforms. The following information is sent to a [Deployment Tracker](https://github.com/cloudant-labs/deployment-tracker) service on each deployment:
 
 * Application Name (`application_name`)
 * Space ID (`space_id`)
 * Application Version (`application_version`)
-* Application URIs (`application_uris)``
+* Application URIs (`application_uris`)
 
 This data is collected from the `VCAP_APPLICATION` environment variable in IBM Bluemix and other Cloud Foundry platforms. This data is used by IBM to track metrics around deployments of sample applications to IBM Bluemix to measure the usefulness of our examples, so that we can continuously improve the content we offer to you. Only deployments of sample applications that include code to ping the Deployment Tracker service will be tracked.
 
-## Disabling deployment tracking
+### Disabling deployment tracking
 
 Deployment tracking can be disabled by removing the require("cf-deployment-tracker-client").track(); line from the end of the 'app.js' file.
+
 
 ## Useful links
 [Install Node.js]: https://nodejs.org/en/download/
