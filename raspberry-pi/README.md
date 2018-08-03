@@ -54,8 +54,8 @@ $ sudo apt-get install git
 * Git Clone this repository in your Raspberry Pi
 
 ```bash
-$ git clone https://github.com/ibm-watson-iot/iot-guide-conveyor-rasp-pi
-$ cd iot-guide-conveyor-rasp-pi
+$ git clone https://github.com/ibm-watson-iot/guide-conveyor
+$ cd guide-conveyor/raspberry-pi
 
 ```
 * You may need to make shell script executable use this command `sudo chmod +x setup.sh`
