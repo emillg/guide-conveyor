@@ -7,7 +7,7 @@ For more information about the getting started guides, see the [Watson IoT Platf
 
 UI using widget library
 
-## Step 1: Setup
+## Setup
 
 ```
 git clone https://github.com/ibm-watson-iot/guide-conveyor.git
@@ -15,7 +15,8 @@ cd guide-conveyor/ui
 npm install
 ```
 
-## Step 2: Building the UI
+
+## Building the UI
 Each widget uses the following JavaScript parameters: `WIoTPWidget.Create<widgetType>(html_id,eventName,deviceType,deviceId,param(s),[, .. widget specific config])`
 
 | Name | Meaning | example|
@@ -136,10 +137,6 @@ config/default.json
  `npm run start`
 
 
-## Reference
-
-To know more about the widget library please refer the [github]("https://github.com/ibm-watson-iot/iot-widgets")
-
 ## Privacy notice
 
 This web application includes code to track deployments to [IBM Bluemix](https://www.bluemix.net/) and other Cloud Foundry platforms. The following information is sent to a [Deployment Tracker](https://github.com/cloudant-labs/deployment-tracker) service on each deployment:
@@ -158,9 +155,10 @@ Deployment tracking can be disabled by removing the require("cf-deployment-track
 
 ## Useful links
 [Install Node.js]: https://nodejs.org/en/download/
-[bluemix_dashboard_url]: https://console.ng.bluemix.net/dashboard/
-[bluemix_signup_url]: https://console.ng.bluemix.net/registration/
-[cloud_foundry_url]: https://github.com/cloudfoundry/cli
+[Bluemix_Dashboard]: https://console.ng.bluemix.net/dashboard/
+[Bluemix_Signup]: https://console.ng.bluemix.net/registration/
+[Cloud_Foundry]: https://github.com/cloudfoundry/cli
+[IoT Widgets Library]("https://github.com/ibm-watson-iot/iot-widgets")
 
 [IBM Bluemix](https://bluemix.net/)  
 [IBM Bluemix Documentation](https://www.ng.bluemix.net/docs/)  
