@@ -1,0 +1,18 @@
+declared-services:
+  lesson4-simulate-cloudantNoSQLDB:
+    label: cloudantNoSQLDB
+    plan: Lite
+  lesson4-simulate-iotf-service:
+    label: iotf-service
+    plan: iotf-service-free
+applications:
+- path: .
+  memory: 512M
+  instances: 1
+  domain: mybluemix.net
+  disk_quota: 1024M
+  services:
+  - lesson4-simulate-cloudantNoSQLDB
+  - lesson4-simulate-iotf-service
+env:
+  NODE_RED_STORAGE_NAME: lesson4-simulate-cloudantNoSQLDB

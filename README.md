@@ -10,3 +10,4 @@ For more information about the getting started guides, see the [Watson IoT Platf
 - [Connect a device to Watson IoT Platform](raspberry-pi/)
 - [Monitoring your device data using the Widget Library](ui/)
 - [Monitoring your device data with a Web Application](ui-angular/)
+- [Simulating a large number of devices](device-simulator/)

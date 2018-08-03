@@ -1,0 +1,409 @@
+[{
+		"id": "5d6be325.275c84",
+		"type": "tab",
+		"label": "Device Creation and Deletion"
+	},
+	{
+		"id": "919793a5.33c3b",
+		"type": "tab",
+		"label": "Simulate multiple devices"
+	},
+	{
+		"id": "ec2ffc67.2ced98",
+		"type": "inject",
+		"z": "5d6be325.275c84",
+		"name": "Test deviceType creation",
+		"topic": "",
+		"payload": "{\"deviceType\":\"device003\"}",
+		"payloadType": "str",
+		"repeat": "",
+		"crontab": "",
+		"once": false,
+		"x": 511,
+		"y": 68.5,
+		"wires": [
+			[
+				"8c297700.23869"
+			]
+		]
+	},
+	{
+		"id": "3ea8d9e8.0694ae",
+		"type": "device-manager",
+		"z": "5d6be325.275c84",
+		"auth": "bluemix",
+		"name": "",
+		"apiKey": "",
+		"deviceType": "devices",
+		"method": "Create",
+		"deviceId": "",
+		"password": "",
+		"ignore": false,
+		"x": 750.5,
+		"y": 233.25,
+		"wires": [
+			[
+				"bbb905cf.962cf8"
+			]
+		]
+	},
+	{
+		"id": "bbb905cf.962cf8",
+		"type": "debug",
+		"z": "5d6be325.275c84",
+		"name": "",
+		"active": true,
+		"console": "false",
+		"complete": "false",
+		"x": 972.5,
+		"y": 233.25,
+		"wires": []
+	},
+	{
+		"id": "bd0190fa.8f9a48",
+		"type": "inject",
+		"z": "5d6be325.275c84",
+		"name": "Delete 5 devices",
+		"topic": "",
+		"payload": "{\"numberDevices\":5,\"deviceType\":\"iot-conveyor-belt\", \"deviceName\":\"belt\"}",
+		"payloadType": "json",
+		"repeat": "",
+		"crontab": "",
+		"once": false,
+		"x": 130,
+		"y": 418,
+		"wires": [
+			[
+				"24ff882b.b02f68"
+			]
+		]
+	},
+	{
+		"id": "55c35540.b8d6ec",
+		"type": "device-manager",
+		"z": "5d6be325.275c84",
+		"auth": "bluemix",
+		"name": "",
+		"apiKey": "",
+		"deviceType": "iot-conveyor-belt",
+		"method": "Delete",
+		"deviceId": "",
+		"password": "",
+		"ignore": false,
+		"x": 585,
+		"y": 419.25,
+		"wires": [
+			[
+				"e84bafa5.48366"
+			]
+		]
+	},
+	{
+		"id": "e84bafa5.48366",
+		"type": "debug",
+		"z": "5d6be325.275c84",
+		"name": "",
+		"active": true,
+		"console": "false",
+		"complete": "true",
+		"x": 793,
+		"y": 419.25,
+		"wires": []
+	},
+	{
+		"id": "c7720aeb.228e08",
+		"type": "function",
+		"z": "919793a5.33c3b",
+		"name": "Set message event",
+		"func": "var msgevt = 0 ;\nvar msgCount = 0;\nvar numberEvents = msg.payload.numberEvents;\nvar numberDevices = msg.payload.numberDevices;\nvar timeInterval = msg.payload.timeInterval;\nvar deviceType = msg.payload.deviceType;\nvar deviceName = msg.payload.deviceName;\n\nvar rpmLow = 1.0;\nvar rpmHigh = 3.0;\n\nvar ayLow = -1.0;\nvar ayHigh = 1.0;\n\nvar rpmArray = [];\nvar ayArray = [];\n\nfor (var j = 0 ; j < numberDevices ; j++) {\n    rpmArray[j] = parseFloat(((Math.random() * (rpmHigh - rpmLow /* + 1.0 */) + rpmLow)).toFixed(1));\n    ayArray[j] = parseFloat(((Math.random() * (ayHigh - ayLow) /* + 1.0 */)).toFixed(3));\n}\n\nvar callbackFunc = function() {\n    msgevt += 1;\n\n    if(msgevt >= numberEvents) {\n        clearInterval(timerId);\n    }\n    for (var i = 1 ; i <= numberDevices ; i++) {\n        msgCount += 1;\n        msg.payload = {};\n        msg.payload.d = {};\n\n        msg.payload.d.id = deviceName + i;\n        msg.payload.d.ts = new Date().getTime();\n        msg.payload.d.ay = ayArray[i-1];\n        msg.payload.d.running = true;\n        msg.payload.d.rpm = rpmArray[i-1];\n\n        direction = msg.payload.d.ts % 2 === 0 ? -0.1 : 0.1; \n        rpmArray[i-1] = parseFloat((rpmArray[i-1] + direction).toFixed(1));\n        direction = msg.payload.d.ts % 2 === 0 ? -0.05 : 0.05;\n        ayArray[i-1] = parseFloat((ayArray[i-1] + direction).toFixed(3));\n        \n        msg.payload.d.msgCount = msgCount;\n//        msg.qos = msg.payload.qos || 0;\n        msg.deviceId = deviceName + i;\n        msg.deviceType = deviceType;\n        node.send(msg);\n    }\n}\nvar timerId = setInterval(callbackFunc, timeInterval);",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 486,
+		"y": 311,
+		"wires": [
+			[
+				"8c728ce1.07765",
+				"845cde58.a1975"
+			]
+		]
+	},
+	{
+		"id": "1bf694c2.3d1673",
+		"type": "inject",
+		"z": "919793a5.33c3b",
+		"name": "Simulate 5 devices",
+		"topic": "",
+		"payload": "{ \"numberDevices\":5,\"numberEvents\":10, \"timeInterval\":1000, \"deviceType\":\"iot-conveyor-belt\",\"deviceName\":\"belt\"}",
+		"payloadType": "json",
+		"repeat": "",
+		"crontab": "",
+		"once": false,
+		"x": 185,
+		"y": 311,
+		"wires": [
+			[
+				"c7720aeb.228e08"
+			]
+		]
+	},
+	{
+		"id": "8c728ce1.07765",
+		"type": "ibmiot out",
+		"z": "919793a5.33c3b",
+		"authentication": "boundService",
+		"apiKey": "",
+		"outputType": "evt",
+		"deviceId": "uuu",
+		"deviceType": "iot-conveyor-belt",
+		"eventCommandType": "sensorData",
+		"format": "json",
+		"data": "{\"d\":{\"temp\":22}}",
+		"qos": "",
+		"name": "IBM IoT",
+		"service": "registered",
+		"x": 747,
+		"y": 312,
+		"wires": []
+	},
+	{
+		"id": "9fb4b9db.9dcc8",
+		"type": "http in",
+		"z": "919793a5.33c3b",
+		"name": "",
+		"url": "/rest/runtest",
+		"method": "post",
+		"swaggerDoc": "",
+		"x": 185.49998474121094,
+		"y": 257.24998474121094,
+		"wires": [
+			[
+				"c7720aeb.228e08",
+				"fae2229c.7d43d"
+			]
+		]
+	},
+	{
+		"id": "1cfb3c43.0b7cdc",
+		"type": "http response",
+		"z": "919793a5.33c3b",
+		"name": "",
+		"x": 737.5,
+		"y": 256.49998474121094,
+		"wires": []
+	},
+	{
+		"id": "fae2229c.7d43d",
+		"type": "function",
+		"z": "919793a5.33c3b",
+		"name": "update start time",
+		"func": "msg.payload.timestamp = new Date().toUTCString();\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 485.5,
+		"y": 256.74998474121094,
+		"wires": [
+			[
+				"1cfb3c43.0b7cdc"
+			]
+		]
+	},
+	{
+		"id": "6f13a507.d83b04",
+		"type": "function",
+		"z": "5d6be325.275c84",
+		"name": "Set message event",
+		"func": "var numberDevices = parseInt(msg.payload.numberDevices);\nvar deviceCount = 0;\nvar chunkSize = parseInt(msg.payload.chunkSize) || 500;\n\nchunkSize > 2000 ? 2000 : chunkSize;\nchunkSize > numberDevices ? numberDevices : chunkSize;\n\nvar typeId = msg.payload.typeId || \"devices\";\nvar password = msg.payload.authToken;\nvar deviceName = msg.payload.deviceName;\n\nvar chunks = numberDevices / chunkSize;\nvar deviceCreateCallback = function() {\n    var devicePointer = 0;\n    for (var cycle = 0 ; cycle <= chunks ; cycle++) {\n        msg.payload=[];\n        \n        for (var i = 0 ; devicePointer < numberDevices && i < chunkSize ; i++) {\n            var singleDevice = {};\n            devicePointer++;\n            singleDevice.deviceId = deviceName + devicePointer;\n            singleDevice.typeId = typeId;\n            if(password) {\n                singleDevice.authToken = password;                \n            }\n\n            msg.payload.push(singleDevice);\n        }\n        if(msg.payload.length !== 0)\n            node.send(msg);\n    }\n}\n\ndeviceCreateCallback();\n//var timerId = setInterval(deviceCreateCallback, timerId);",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 496.5,
+		"y": 234.25,
+		"wires": [
+			[
+				"3ea8d9e8.0694ae"
+			]
+		]
+	},
+	{
+		"id": "cf6d439f.cce53",
+		"type": "http in",
+		"z": "5d6be325.275c84",
+		"name": "",
+		"url": "/rest/devices",
+		"method": "post",
+		"swaggerDoc": "",
+		"x": 131,
+		"y": 121.5,
+		"wires": [
+			[
+				"372200d.c998f",
+				"630a79aa.df3328",
+				"98daf331.e3c88"
+			]
+		]
+	},
+	{
+		"id": "372200d.c998f",
+		"type": "http response",
+		"z": "5d6be325.275c84",
+		"name": "",
+		"x": 301,
+		"y": 66.75,
+		"wires": []
+	},
+	{
+		"id": "5d902db8.c68764",
+		"type": "http response",
+		"z": "5d6be325.275c84",
+		"name": "",
+		"x": 387.5,
+		"y": 369.5,
+		"wires": []
+	},
+	{
+		"id": "bb755946.ddfdd8",
+		"type": "http in",
+		"z": "5d6be325.275c84",
+		"name": "",
+		"url": "/rest/deleteDevices",
+		"method": "post",
+		"swaggerDoc": "",
+		"x": 122.5,
+		"y": 370.25,
+		"wires": [
+			[
+				"5d902db8.c68764",
+				"24ff882b.b02f68"
+			]
+		]
+	},
+	{
+		"id": "8c297700.23869",
+		"type": "device-type-manager",
+		"z": "5d6be325.275c84",
+		"auth": "bluemix",
+		"name": "",
+		"apiKey": "",
+		"deviceType": "",
+		"classId": "Device",
+		"method": "Create",
+		"deviceTypeId": "",
+		"serialNumber": "",
+		"manufacturer": "",
+		"model": "",
+		"deviceClass": "",
+		"infoDescription": "",
+		"firmwareVersion": "",
+		"hardwareVersion": "",
+		"descriptiveLocation": "",
+		"metadata": "",
+		"password": "",
+		"properties": [],
+		"ignore": true,
+		"x": 764.5,
+		"y": 122.25,
+		"wires": [
+			[
+				"e67b7371.81027"
+			]
+		]
+	},
+	{
+		"id": "e67b7371.81027",
+		"type": "debug",
+		"z": "5d6be325.275c84",
+		"name": "",
+		"active": true,
+		"console": "false",
+		"complete": "false",
+		"x": 966.5,
+		"y": 122.25,
+		"wires": []
+	},
+	{
+		"id": "630a79aa.df3328",
+		"type": "function",
+		"z": "5d6be325.275c84",
+		"name": "Override deviceType",
+		"func": "msg.payload.deviceType = msg.payload.typeId\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 506,
+		"y": 123,
+		"wires": [
+			[
+				"8c297700.23869"
+			]
+		]
+	},
+	{
+		"id": "98daf331.e3c88",
+		"type": "delay",
+		"z": "5d6be325.275c84",
+		"name": "",
+		"pauseType": "delay",
+		"timeout": "5",
+		"timeoutUnits": "seconds",
+		"rate": "1",
+		"nbRateUnits": "1",
+		"rateUnits": "second",
+		"randomFirst": "1",
+		"randomLast": "5",
+		"randomUnits": "seconds",
+		"drop": false,
+		"x": 465,
+		"y": 183,
+		"wires": [
+			[
+				"6f13a507.d83b04"
+			]
+		]
+	},
+	{
+		"id": "845cde58.a1975",
+		"type": "debug",
+		"z": "919793a5.33c3b",
+		"name": "",
+		"active": true,
+		"console": "false",
+		"complete": "true",
+		"x": 741.5,
+		"y": 379.5,
+		"wires": []
+	},
+	{
+		"id": "ffb798d8.4463c8",
+		"type": "inject",
+		"z": "5d6be325.275c84",
+		"name": "Register 5 iot-conveyor-belt devices",
+		"topic": "",
+		"payload": "{\"numberDevices\":5,\"typeId\":\"iot-conveyor-belt\",\"authToken\":\"mypassword\",\"chunkSize\":5,\"deviceName\":\"belt\"}",
+		"payloadType": "json",
+		"repeat": "",
+		"crontab": "",
+		"once": false,
+		"x": 178.5,
+		"y": 184.5,
+		"wires": [
+			[
+				"630a79aa.df3328",
+				"98daf331.e3c88"
+			]
+		]
+	},
+	{
+		"id": "24ff882b.b02f68",
+		"type": "function",
+		"z": "5d6be325.275c84",
+		"name": "",
+		"func": "var numberDevices = msg.payload.numberDevices;\ndeviceArray = [];\nfor(count = 0 ; count < numberDevices ; count++) {\n    singleDevice = {};\n    singleDevice.typeId = msg.payload.deviceType;\n    singleDevice.deviceId = msg.payload.deviceName + (count+1); \n    deviceArray[count] = singleDevice;\n}\nmsg.payload = deviceArray;\nreturn msg;",
+		"outputs": 1,
+		"noerr": 0,
+		"x": 386.20001220703125,
+		"y": 418.20001220703125,
+		"wires": [
+			[
+				"55c35540.b8d6ec"
+			]
+		]
+	}
+]
